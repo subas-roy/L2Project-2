@@ -28,4 +28,4 @@ function main() {
         }
     });
 }
-const asd = 10;
+main();

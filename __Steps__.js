@@ -24,6 +24,13 @@
  *    * in 'tsconfig.json' set "rootDir": "/src" and "outDir": "/dist"
  * 
  * 8. npm i --save-dev @types/node
- * 9. 
+ * 
+ * ------------------------------------
+ *    Connecting with MongoDB Driver
+ * ------------------------------------
+ * 9. create '.env' file and set "PORT=5000 and DATABASE_URL=connection string"
+ * 10. create a database user form Database Access -> ADD New DATABASE User 
+ * 11. in .env replace the username and password and new database name
+ * 12. 
  *  
  */

@@ -4,10 +4,10 @@ import { Schema, model, connect } from 'mongoose';
 export type Guardian = {
   fatherName: string;
   fatherOccupation: string;
-  fatherContactno: string;
+  fatherContactNo: string;
   motherName: string;
   motherOccupation: string;
-  motherContactno: string;
+  motherContactNo: string;
 };
 
 export type UserName = {
@@ -24,9 +24,10 @@ export type localGuardian = {
 };
 
 export type Student = {
+  id: string;
   name: UserName;
   gender: 'male' | 'female';
-  dateOfBirth: string;
+  dateOfBirth?: string;
   email: string;
   contactNo: string;
   emergencyContactNo: string;
@@ -36,5 +37,5 @@ export type Student = {
   guardian: Guardian;
   localGuardian: localGuardian;
   profileImg?: string;
-  isActive: 'active' | 'inActive';
+  isActive: 'active' | 'blocked';
 };

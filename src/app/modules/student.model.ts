@@ -84,3 +84,6 @@ const studentSchema = new Schema<Student>({
   },
   isActive: ['active', 'blocked'],
 });
+
+// 3. Create a Model.
+const Student = model<Student>('Student', studentSchema);

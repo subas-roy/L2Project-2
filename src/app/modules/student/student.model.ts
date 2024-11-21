@@ -10,6 +10,7 @@ const userNameSchema = new Schema<UserName>({
   firstName: {
     type: String,
     required: [true, 'first name is required'],
+    maxlength: [20, 'Frist name can not be more than 20 characters'],
   },
   middleName: {
     type: String,

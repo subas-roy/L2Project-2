@@ -7,18 +7,21 @@ const createStudent = async (req: Request, res: Response) => {
     const { student: studentData } = req.body;
 
     // data validation using Joi
-    const { error, value } = studentValidationSchema.validate(studentData);
+    // const { error, value } = studentValidationSchema.validate(studentData);
+
+    // data validation using zod
+    const zodparsedData = studentValidationSchema.parse(studentData);
 
     // will call service func to send this data
-    const result = await StudentServices.createStudentIntoDB(value);
+    const result = await StudentServices.createStudentIntoDB(zodparsedData);
 
-    if (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Something went wrong',
-        error: error.details,
-      });
-    }
+    // if (error) {
+    //   res.status(500).json({
+    //     success: false,
+    //     message: 'Something went wrong',
+    //     error: error.details,
+    //   });
+    // }
 
     // send response
     res.status(200).json({

@@ -10,6 +10,7 @@ import {
 
 import bcrypt from 'bcrypt';
 import config from '../../config';
+import { boolean } from 'joi';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -142,6 +143,10 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     enum: ['active', 'blocked'],
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // pre save middleware/ hook: will work on create()  save()
@@ -163,6 +168,17 @@ studentSchema.pre('save', async function (next) {
 studentSchema.post('save', function (doc, next) {
   doc.password = '';
 
+  next();
+});
+
+// Query Middleware
+studentSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+studentSchema.pre('findOne', function (next) {
+  this.findOne({ isDeleted: { $ne: true } });
   next();
 });
 

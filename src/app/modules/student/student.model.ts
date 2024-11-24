@@ -4,7 +4,6 @@ import {
   TGuardian,
   TlocalGuardian,
   TStudent,
-  StudentMethods,
   StudentModel,
   TUserName,
 } from './student.interface';
@@ -83,7 +82,7 @@ const localGuardianSchema = new Schema<TlocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
+const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: true, unique: true },
   name: {
     type: userNameSchema,
@@ -137,10 +136,18 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
   },
 });
 
-studentSchema.methods.isUserExists = async function (id: string) {
+// creating a custom static method
+studentSchema.statics.isUserExists = async function (id: string) {
   const exstingUser = await Student.findOne({ id });
+
   return exstingUser;
 };
+
+// creating a custom instance method
+// studentSchema.methods.isUserExists = async function (id: string) {
+//   const exstingUser = await Student.findOne({ id });
+//   return exstingUser;
+// };
 
 // 3. Create a Model.
 export const Student = model<TStudent, StudentModel>('Student', studentSchema); // 'student' will ben 'students' in MongoDB

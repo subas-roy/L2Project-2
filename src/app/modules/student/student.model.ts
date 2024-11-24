@@ -1,13 +1,15 @@
 import { Schema, model } from 'mongoose';
 
 import {
-  Guardian,
-  localGuardian,
-  Student,
-  UserName,
+  TGuardian,
+  TlocalGuardian,
+  TStudent,
+  StudentMethods,
+  StudentModel,
+  TUserName,
 } from './student.interface';
 
-const userNameSchema = new Schema<UserName>({
+const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     required: [true, 'first name is required'],
@@ -25,7 +27,7 @@ const userNameSchema = new Schema<UserName>({
   },
 });
 
-const guardianSchema = new Schema<Guardian>({
+const guardianSchema = new Schema<TGuardian>({
   fatherName: {
     type: String,
     required: [true, 'Father name is required'],
@@ -58,7 +60,7 @@ const guardianSchema = new Schema<Guardian>({
   },
 });
 
-const localGuardianSchema = new Schema<localGuardian>({
+const localGuardianSchema = new Schema<TlocalGuardian>({
   name: {
     type: String,
     required: [true, 'Local guardian name is required'],
@@ -81,7 +83,7 @@ const localGuardianSchema = new Schema<localGuardian>({
   },
 });
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
   id: { type: String, required: true, unique: true },
   name: {
     type: userNameSchema,
@@ -135,5 +137,10 @@ const studentSchema = new Schema<Student>({
   },
 });
 
+studentSchema.methods.isUserExists = async function (id: string) {
+  const exstingUser = await Student.findOne({ id });
+  return exstingUser;
+};
+
 // 3. Create a Model.
-export const StudentModel = model<Student>('Student', studentSchema); // 'student' will ben 'students' in MongoDB
+export const Student = model<TStudent, StudentModel>('Student', studentSchema); // 'student' will ben 'students' in MongoDB

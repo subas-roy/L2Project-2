@@ -90,7 +90,6 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    unique: true,
     maxlength: [20, 'Password can not be more than 20 characters'],
   },
   name: {
@@ -156,12 +155,15 @@ studentSchema.pre('save', async function (next) {
     user.password,
     Number(config.bcrypt_salt_rounds),
   );
+
   next();
 });
 
 // post save middleware/ hook
-studentSchema.post('save', function () {
-  console.log(this, 'post hook: we savec our data');
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+
+  next();
 });
 
 // creating a custom static method

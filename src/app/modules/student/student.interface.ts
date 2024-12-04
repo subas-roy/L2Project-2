@@ -1,6 +1,11 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
-// 1. Create an interface representing a document in MongoDB.
+export type TUserName = {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+};
+
 export type TGuardian = {
   fatherName: string;
   fatherOccupation: string;
@@ -10,13 +15,7 @@ export type TGuardian = {
   motherContactNo: string;
 };
 
-export type TUserName = {
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-};
-
-export type TlocalGuardian = {
+export type TLocalGuardian = {
   name: string;
   occupation: string;
   contactNo: string;
@@ -25,6 +24,7 @@ export type TlocalGuardian = {
 
 export type TStudent = {
   id: string;
+  user: Types.ObjectId;
   password: string;
   name: TUserName;
   gender: 'male' | 'female' | 'other';
@@ -32,25 +32,26 @@ export type TStudent = {
   email: string;
   contactNo: string;
   emergencyContactNo: string;
-  bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
+  bloogGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   presentAddress: string;
   permanentAddress: string;
   guardian: TGuardian;
-  localGuardian: TlocalGuardian;
+  localGuardian: TLocalGuardian;
   profileImg?: string;
-  isActive: 'active' | 'blocked';
   isDeleted: boolean;
 };
 
-// for creating static
+//for creating static
+
 export interface StudentModel extends Model<TStudent> {
   isUserExists(id: string): Promise<TStudent | null>;
 }
 
 // for creating instance
-// export type StudentMethods = {
+
+// export interface StudentMethods {
 //   isUserExists(id: string): Promise<TStudent | null>;
-// };
+// }
 
 // export type StudentModel = Model<
 //   TStudent,

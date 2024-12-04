@@ -8,7 +8,7 @@ const userNameSchema = z.object({
     .refine((value) => /^[A-Z]/.test(value), {
       message: 'First Name must start with a capital letter',
     }),
-  middleName: z.string().optional(),
+  middleName: z.string(),
   lastName: z.string(),
 });
 
@@ -33,20 +33,18 @@ export const studentValidationSchema = z.object({
   password: z.string().max(20),
   name: userNameSchema,
   gender: z.enum(['male', 'female', 'other']),
-  dateOfBirth: z.string().optional(),
+  dateOfBirth: z.string(),
   email: z.string().email(),
   contactNo: z.string(),
   emergencyContactNo: z.string(),
-  bloogGroup: z
-    .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-    .optional(),
+  bloogGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
   presentAddress: z.string(),
   permanentAddress: z.string(),
   guardian: guardianSchema,
   localGuardian: localGuardianSchema,
   profileImg: z.string(),
   isActive: z.enum(['active', 'blocked']).default('active'),
-  isDeleted: z.boolean().default(false),
+  isDeleted: z.boolean().optional(),
 });
 
 export default studentValidationSchema;

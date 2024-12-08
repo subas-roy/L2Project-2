@@ -1,42 +1,45 @@
 import { RequestHandler } from 'express';
-import { StudentServices } from './student.service';
-import sendResponse from '../../utills/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utills/catchAsync';
+import sendResponse from '../..//utills/sendResponse';
+import { StudentServices } from './student.service';
 
-const getAllStudents = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllStudentsFromDB();
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Student are retrieved successfully',
-    data: result,
-  });
-});
-
-const getSingleStudent: RequestHandler = catchAsync(async (req, res) => {
+const getSingleStudent = catchAsync(async (req, res) => {
   const { studentId } = req.params;
   const result = await StudentServices.getSingleStudentFromDB(studentId);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Student is retrieved successfully',
+    message: 'Student is retrieved succesfully',
     data: result,
   });
 });
 
-const deleteStudent: RequestHandler = catchAsync(async (req, res) => {
+const getAllStudents: RequestHandler = catchAsync(async (req, res) => {
+  const result = await StudentServices.getAllStudentsFromDB();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Student are retrieved succesfully',
+    data: result,
+  });
+});
+
+const deleteStudent = catchAsync(async (req, res) => {
   const { studentId } = req.params;
   const result = await StudentServices.deleteStudentFromDB(studentId);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Student is deleted successfully',
+    message: 'Student is deleted succesfully',
     data: result,
   });
 });
 
-export const studentControllers = {
+export const StudentControllers = {
   getAllStudents,
   getSingleStudent,
   deleteStudent,

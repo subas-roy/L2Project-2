@@ -1,22 +1,48 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { Request, Response, NextFunction } from 'express';
+import { ErrorRequestHandler } from 'express';
+import { ZodError } from 'zod';
 
-const globalErrorHandler = (
-  err: any,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
+const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  // setting default values
+  let statusCode = err.statusCode || 500;
+  let message = err.message || 'Internal Server Error';
 
+  type TErrorSource = {
+    path: string | number;
+    meessage: string;
+  }[];
+
+  let errorSources: TErrorSource = [
+    {
+      path: '',
+      meessage: 'Something went wrong',
+    },
+  ];
+
+  if (err instanceof ZodError) {
+    statusCode = 400;
+    message = 'ami zod error';
+  }
+
+  // ultimate return
   return res.status(statusCode).json({
     success: false,
     message,
-    error: err,
+    errorSources,
+    amiError: err,
   });
 };
 
 export default globalErrorHandler;
+
+// pattern
+/*
+success
+message
+errorSources: [
+  path: '',
+  message: ''
+]
+stack
+*/

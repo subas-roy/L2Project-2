@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import { ErrorRequestHandler } from 'express';
-import { ZodError } from 'zod';
+import { ZodError, ZodIssue } from 'zod';
+import { TErrorSource } from '../interface/error';
+import config from '../config';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // setting default values
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
-
-  type TErrorSource = {
-    path: string | number;
-    meessage: string;
-  }[];
 
   let errorSources: TErrorSource = [
     {
@@ -20,9 +17,26 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     },
   ];
 
+  const hangleZodError = (err: ZodError) => {
+    const errorSources: TErrorSource = err.issues.map((issue: ZodIssue) => {
+      return {
+        path: issue?.path[issue.path.length - 1],
+        message: issue.message,
+      };
+    });
+    const statusCode = 400;
+    return {
+      statusCode,
+      message: 'Validation error',
+      errorSources,
+    };
+  };
+
   if (err instanceof ZodError) {
-    statusCode = 400;
-    message = 'ami zod error';
+    const simplifiedError = hangleZodError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError.errorSources;
   }
 
   // ultimate return
@@ -30,7 +44,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     success: false,
     message,
     errorSources,
-    amiError: err,
+    stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };
 

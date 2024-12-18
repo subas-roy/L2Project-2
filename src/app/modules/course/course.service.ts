@@ -23,8 +23,23 @@ const getAllCoursesFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getSingleCourseFromDB = async (id: string) => {
-  const result = await Course.findById(id);
+  const result = await Course.findById(id).populate(
+    'preRequisiteCourses.course',
+  );
   return result;
+};
+
+const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
+  const { preRequisiteCourses, ...courseRemainingData } = payload;
+
+  // step1: basic course info update
+  const updatedCourseInfo = await Course.findByIdAndUpdate(
+    id,
+    courseRemainingData,
+    { new: true, runValidators: true },
+  );
+
+  return updatedCourseInfo;
 };
 
 const deleteCourseFromDB = async (id: string) => {
@@ -41,4 +56,5 @@ export const CourseServices = {
   getAllCoursesFromDB,
   getSingleCourseFromDB,
   deleteCourseFromDB,
+  updateCourseIntoDB,
 };

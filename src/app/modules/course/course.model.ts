@@ -8,6 +8,7 @@ const preRequisiteCoursesSchema = new Schema<TPreRequisiteCourses>({
   },
   isDeleted: {
     type: Boolean,
+    default: false,
   },
 });
 

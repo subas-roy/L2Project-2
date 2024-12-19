@@ -21,6 +21,11 @@ router.patch(
   CourseControllers.updateCourse,
 );
 
+router.put(
+  '/:courseId/asign-faculties',
+  CourseControllers.assignFacultiesWithCourse,
+);
+
 router.get('/', CourseControllers.getAllCourses);
 
 export const CourseRoutes = router;

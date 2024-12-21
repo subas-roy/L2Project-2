@@ -38,7 +38,7 @@ export const semesterRegistrationSchema =
     },
   );
 
-export const semesterRegistration = mongoose.model<TSemesterRegistration>(
+export const SemesterRegistration = mongoose.model<TSemesterRegistration>(
   'SemesterRegistration',
   semesterRegistrationSchema,
 );

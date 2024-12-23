@@ -2,10 +2,12 @@ import { Request, Response } from 'express';
 import catchAsync from '../../utills/catchAsync';
 import sendResponse from '../../utills/sendResponse';
 import httpStatus from 'http-status';
-import { offeredCourseService } from './offeredCourse.service';
+import { OfferedCourseServices } from './offeredCourse.service';
 
 const createOfferedCourse = catchAsync(async (req: Request, res: Response) => {
-  const result = await offeredCourseService.createOfferedCourseIntoDB(req.body);
+  const result = await OfferedCourseServices.createOfferedCourseIntoDB(
+    req.body,
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -45,27 +47,24 @@ const createOfferedCourse = catchAsync(async (req: Request, res: Response) => {
 //   },
 // );
 
-// const updateSemesterRegistration = catchAsync(
-//   async (req: Request, res: Response) => {
-//     const { id } = req.params;
-//     const result =
-//       await semesterRegistrationService.updateSemesterRegistrationIntoDB(
-//         id,
-//         req.body,
-//       );
+const updateOfferedCourse = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await OfferedCourseServices.updateOfferedCourseIntoDB(
+    id,
+    req.body,
+  );
 
-//     sendResponse(res, {
-//       statusCode: httpStatus.OK,
-//       success: true,
-//       message: 'Semester Registration updated succesfully',
-//       data: result,
-//     });
-//   },
-// );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Offered course updated succesfully',
+    data: result,
+  });
+});
 
 export const offeredcourseController = {
   createOfferedCourse,
-  // updateSemesterRegistration,
+  updateOfferedCourse,
   // getAllSemesterRegistration,
   // getSingleSemesterRegistration,
 };

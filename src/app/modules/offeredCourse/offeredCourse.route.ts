@@ -16,13 +16,11 @@ router.post(
 //   offeredcourseController.getSingleSemesterRegistration,
 // );
 
-// router.patch(
-//   '/:id',
-//   validateRequest(
-//     offeredcourseController.updateSemesterRegistrationValidationSchema,
-//   ),
-//   offeredcourseController.updateSemesterRegistration,
-// );
+router.patch(
+  '/:id',
+  validateRequest(OfferedCourseValidations.updateOfferedCourseValidationSchema),
+  offeredcourseController.updateOfferedCourse,
+);
 
 // router.get('/', offeredcourseController.getAllSemesterRegistration);
 

@@ -30,6 +30,7 @@ const updateFaculty = catchAsync(async (req, res) => {
 });
 
 const getAllFaculties: RequestHandler = catchAsync(async (req, res) => {
+  console.log('test', req.user);
   const result = await FacultyServices.getAllFacultiesFromDB(req.query);
 
   sendResponse(res, {

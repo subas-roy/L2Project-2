@@ -13,6 +13,7 @@ export interface TUser {
 export interface UserModel extends Model<TUser> {
   // function defination
   isUseExistsByCustomId(id: string): Promise<TUser>;
+
   isPasswordMatched(
     plainTextPassword: string,
     hashedPassword: string,

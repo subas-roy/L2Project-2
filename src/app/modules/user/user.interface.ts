@@ -6,6 +6,7 @@ export interface TUser {
   id: string;
   password: string;
   needsPasswordChange: boolean;
+  passwordChangedAt?: Date;
   role: 'admin' | 'student' | 'faculty';
   status: 'in-progress' | 'blocked';
   isDeleted: boolean;
@@ -13,7 +14,7 @@ export interface TUser {
 
 export interface UserModel extends Model<TUser> {
   // function defination
-  isUseExistsByCustomId(id: string): Promise<TUser>;
+  isUserExistsByCustomId(id: string): Promise<TUser>;
 
   isPasswordMatched(
     plainTextPassword: string,

@@ -1,6 +1,6 @@
 export type TErrorSources = {
   path: string | number;
-  meessage: string;
+  message: string;
 }[];
 
 export type TGenericErrorResponse = {

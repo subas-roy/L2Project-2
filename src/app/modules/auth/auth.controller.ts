@@ -4,7 +4,7 @@ import sendResponse from '../../utills/sendResponse';
 import { AuthServices } from './auth.service';
 import httpStatus from 'http-status';
 
-const LoginUser = catchAsync(async (req, res) => {
+const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUser(req.body);
   const { refreshToken, accessToken, needsPasswordChange } = result;
 
@@ -48,8 +48,20 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 });
 
+const forgetPassword = catchAsync(async (req, res) => {
+  const userId = req.body.id;
+  const result = await AuthServices.forgetPassword(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Access link is generated successfully!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
-  LoginUser,
+  loginUser,
   changePassword,
   refreshToken,
+  forgetPassword,
 };

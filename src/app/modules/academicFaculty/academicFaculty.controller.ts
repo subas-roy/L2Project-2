@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
-import catchAsync from '../../utills/catchAsync';
-import sendResponse from '../../utills/sendResponse';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 import { AcademicFacultyServices } from './academicFaculty.service';
 
 const createAcademicFaculty = catchAsync(async (req, res) => {

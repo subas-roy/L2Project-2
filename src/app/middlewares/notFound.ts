@@ -16,18 +16,3 @@ const notFound = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export default notFound;
-
-// /* eslint-disable no-undef */
-// /* eslint-disable @typescript-eslint/no-require-imports */
-// /* eslint-disable @typescript-eslint/no-unused-vars */
-// /* eslint-disable no-unused-vars */
-// import { Request, Response, NextFunction } from 'express';
-// const HttpStatus = require('http-status').default;
-
-// const notFound = (req: Request, res: Response, next: NextFunction) => {
-//   return res.status(HttpStatus).json({
-//     success: false,
-//   });
-// };
-
-// export default notFound;

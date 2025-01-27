@@ -8,7 +8,7 @@ const handleValidationError = (
     (val: mongoose.Error.ValidationError | mongoose.Error.CastError) => {
       return {
         path: val?.path,
-        meessage: val?.message,
+        message: val?.message,
       };
     },
   );

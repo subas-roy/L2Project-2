@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
-import catchAsync from '../../utills/catchAsync';
-import sendResponse from '../..//utills/sendResponse';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 import { FacultyServices } from './faculty.service';
 
 const getSingleFaculty = catchAsync(async (req, res) => {

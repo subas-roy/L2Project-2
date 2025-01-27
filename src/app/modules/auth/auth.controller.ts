@@ -1,6 +1,6 @@
 import config from '../../config';
-import catchAsync from '../../utills/catchAsync';
-import sendResponse from '../../utills/sendResponse';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
 import httpStatus from 'http-status';
 

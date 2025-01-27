@@ -32,4 +32,3 @@ process.on('uncaughtException', () => {
   console.log('uncaughtException is detected');
   process.exit(1);
 });
-

@@ -60,6 +60,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     }
 
     req.user = decoded as JwtPayload;
+
     next();
   });
 };

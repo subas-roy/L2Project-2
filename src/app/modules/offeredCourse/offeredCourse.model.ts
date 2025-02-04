@@ -14,6 +14,11 @@ const offeredCourseSchema = new mongoose.Schema<TOfferedCourse>(
       required: true,
       ref: 'AcademicSemester',
     },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'AcademicFaculty',
+    },
     academicDepartment: {
       type: Schema.Types.ObjectId,
       required: true,
@@ -57,7 +62,7 @@ const offeredCourseSchema = new mongoose.Schema<TOfferedCourse>(
   },
 );
 
-export const offeredCourse = mongoose.model<TOfferedCourse>(
+export const OfferedCourse = mongoose.model<TOfferedCourse>(
   'OfferedCourse',
   offeredCourseSchema,
 );

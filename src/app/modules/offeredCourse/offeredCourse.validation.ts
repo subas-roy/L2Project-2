@@ -15,6 +15,7 @@ const createOfferedCourseValidationSchema = z.object({
   body: z
     .object({
       semesterRegistration: z.string(),
+      academicSemester: z.string(),
       academicFaculty: z.string(),
       academicDepartment: z.string(),
       course: z.string(),
@@ -46,7 +47,7 @@ const updateOfferedCourseValidationSchema = z.object({
     .object({
       faculty: z.string(),
       maxCapacity: z.number(),
-      days: z.array(z.enum([...Days] as [string, ...string[]])),
+      days: z.enum([...Days] as [string, ...string[]]),
       startTime: timeStringSchema, // HH: MM   00-23: 00-59
       endTime: timeStringSchema,
     })

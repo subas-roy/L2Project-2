@@ -16,36 +16,32 @@ const createOfferedCourse = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const getAllSemesterRegistration = catchAsync(
-//   async (req: Request, res: Response) => {
-//     const result =
-//       await semesterRegistrationService.getAllSemesterRegistrationFromDB(
-//         req.query,
-//       );
+const getAllOfferedCourse = catchAsync(async (req: Request, res: Response) => {
+  const result = await OfferedCourseServices.getAllOfferedCoursesFromDB(
+    req.query,
+  );
 
-//     sendResponse(res, {
-//       statusCode: httpStatus.OK,
-//       success: true,
-//       message: 'Semester Registrations are retrieved succesfully',
-//       data: result,
-//     });
-//   },
-// );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Offered courses are retrieved succesfully',
+    data: result,
+  });
+});
 
-// const getSingleSemesterRegistration = catchAsync(
-//   async (req: Request, res: Response) => {
-//     const { id } = req.params;
-//     const result =
-//       await semesterRegistrationService.getSingleSemesterRegistrationFromDB(id);
+const getSingleOfferedCourse = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await OfferedCourseServices.getSingleOfferedCourseFromDB(id);
 
-//     sendResponse(res, {
-//       statusCode: httpStatus.OK,
-//       success: true,
-//       message: 'Semester Registration is retrieved succesfully',
-//       data: result,
-//     });
-//   },
-// );
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Offered course is retrieved succesfully',
+      data: result,
+    });
+  },
+);
 
 const updateOfferedCourse = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -62,9 +58,9 @@ const updateOfferedCourse = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const offeredcourseController = {
+export const OfferedcourseControllers = {
   createOfferedCourse,
   updateOfferedCourse,
-  // getAllSemesterRegistration,
-  // getSingleSemesterRegistration,
+  getAllOfferedCourse,
+  getSingleOfferedCourse,
 };

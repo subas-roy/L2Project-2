@@ -6,7 +6,7 @@ import { AcademicDepartment } from '../academicDepartment/academicDepartment.mod
 import { AcademicFaculty } from '../academicFaculty/academicFaculty.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 import { TOfferedCourse } from './offeredCourse.interface';
-import { offeredCourse } from './offeredCourse.model';
+import { OfferedCourse } from './offeredCourse.model';
 import { hasTimeConflict } from './offeredCourse.utils';
 import QueryBuilder from '../../builder/Querybuilder';
 
@@ -91,7 +91,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   // check if the same offered course same section in same registered semester exists
 
   const isSameOfferedCourseExistsWithSameRegisteredSemesterWithSameSection =
-    await offeredCourse.findOne({
+    await OfferedCourse.findOne({
       semesterRegistration,
       course,
       section,
@@ -105,13 +105,11 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   }
 
   // get the schedules of the faculties
-  const assignedSchedules = await offeredCourse
-    .find({
-      semesterRegistration,
-      faculty,
-      days: { $in: days },
-    })
-    .select('days startTime endTime');
+  const assignedSchedules = await OfferedCourse.find({
+    semesterRegistration,
+    faculty,
+    days: { $in: days },
+  }).select('days startTime endTime');
 
   const newSchedule = {
     days,
@@ -126,7 +124,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     );
   }
 
-  const result = await offeredCourse.create({
+  const result = await OfferedCourse.create({
     ...payload,
     academicSemester,
   });
@@ -134,7 +132,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
 };
 
 const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
-  const offeredCourseQuery = new QueryBuilder(offeredCourse.find(), query)
+  const offeredCourseQuery = new QueryBuilder(OfferedCourse.find(), query)
     .filter()
     .sort()
     .paginate()
@@ -145,13 +143,13 @@ const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getSingleOfferedCourseFromDB = async (id: string) => {
-  const OfferedCourse = await offeredCourse.findById(id);
+  const offeredCourse = await OfferedCourse.findById(id);
 
-  if (!OfferedCourse) {
+  if (!offeredCourse) {
     throw new AppError(404, 'Offered Course not found');
   }
 
-  return OfferedCourse;
+  return offeredCourse;
 };
 
 const updateOfferedCourseIntoDB = async (
@@ -167,7 +165,7 @@ const updateOfferedCourseIntoDB = async (
    */
   const { faculty, days, startTime, endTime } = payload;
 
-  const isOfferedCourseExists = await offeredCourse.findById(id);
+  const isOfferedCourseExists = await OfferedCourse.findById(id);
 
   if (!isOfferedCourseExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Offered course not found !');
@@ -194,13 +192,11 @@ const updateOfferedCourseIntoDB = async (
   }
 
   // check if the faculty is available at that time.
-  const assignedSchedules = await offeredCourse
-    .find({
-      semesterRegistration,
-      faculty,
-      days: { $in: days },
-    })
-    .select('days startTime endTime');
+  const assignedSchedules = await OfferedCourse.find({
+    semesterRegistration,
+    faculty,
+    days: { $in: days },
+  }).select('days startTime endTime');
 
   const newSchedule = {
     days,
@@ -215,7 +211,7 @@ const updateOfferedCourseIntoDB = async (
     );
   }
 
-  const result = await offeredCourse.findByIdAndUpdate(id, payload, {
+  const result = await OfferedCourse.findByIdAndUpdate(id, payload, {
     new: true,
   });
   return result;
@@ -227,7 +223,7 @@ const deleteOfferedCourseFromDB = async (id: string) => {
    * Step 2: check if the semester registration status is upcoming
    * Step 3: delete the offered course
    */
-  const isOfferedCourseExists = await offeredCourse.findById(id);
+  const isOfferedCourseExists = await OfferedCourse.findById(id);
 
   if (!isOfferedCourseExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Offered Course not found');
@@ -245,7 +241,7 @@ const deleteOfferedCourseFromDB = async (id: string) => {
     );
   }
 
-  const result = await offeredCourse.findByIdAndDelete(id);
+  const result = await OfferedCourse.findByIdAndDelete(id);
 
   return result;
 };

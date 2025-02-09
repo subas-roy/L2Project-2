@@ -59,6 +59,29 @@ const createEnrolledCourseIntoDB = async (
         student: student._id,
       },
     },
+    {
+      $lookup: {
+        from: 'courses',
+        localField: 'course',
+        foreignField: '_id',
+        as: 'enrolledCourseData',
+      },
+    },
+    {
+      $unwind: '$enrolledCourseData',
+    },
+    {
+      $group: {
+        _id: null,
+        totalEnrolledCredits: { $sum: '$enrolledCourseData.credits' },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        totalEnrolledCredits: 1,
+      },
+    },
   ]);
 
   console.log(enrolledCourses);

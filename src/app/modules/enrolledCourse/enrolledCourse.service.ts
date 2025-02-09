@@ -7,6 +7,7 @@ import EnrolledCourse from './enrolledCourse.model';
 import { Student } from '../student/student.model';
 import mongoose from 'mongoose';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { Course } from '../course/course.model';
 
 const createEnrolledCourseIntoDB = async (
   userId: string,
@@ -15,7 +16,8 @@ const createEnrolledCourseIntoDB = async (
   /**
    * Step1: Check if the offered course is exists
    * Step2: Check if the student is already enrolled
-   * Step3: Create and enrolled course
+   * Step3: Check if the max cretits exceed
+   * Step4: Create and enrolled course
    */
 
   const { offeredCourse } = payload;
@@ -47,11 +49,16 @@ const createEnrolledCourseIntoDB = async (
   }
 
   // check total credits exceeds maxCredit
+
+  const course = await Course.findById(isOfferedCourseExists.course);
+  const currentCredit = course?.credits;
+
   const semesterRegistration = await SemesterRegistration.findById(
     isOfferedCourseExists.semesterRegistration,
   ).select('maxCredit');
 
-  // total enrolled credits + new enrolled crouse credit > maxCredit
+  const maxCredit = semesterRegistration?.maxCredit;
+
   const enrolledCourses = await EnrolledCourse.aggregate([
     {
       $match: {
@@ -84,52 +91,61 @@ const createEnrolledCourseIntoDB = async (
     },
   ]);
 
-  console.log(enrolledCourses);
+  // total enrolled credits + new enrolled crouse credit > maxCredit
+  const totalCredits =
+    enrolledCourses.length > 0 ? enrolledCourses[0].totalEnrolledCredits : 0;
 
-  // // Transaction
-  // const session = await mongoose.startSession();
+  if (totalCredits && maxCredit && totalCredits + currentCredit > maxCredit) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'You have exceeded maximum number of credits !',
+    );
+  }
 
-  // try {
-  //   session.startTransaction();
+  // Transaction
+  const session = await mongoose.startSession();
 
-  //   const result = await EnrolledCourse.create(
-  //     [
-  //       {
-  //         semesterRegistration: isOfferedCourseExists.semesterRegistration,
-  //         academicSemester: isOfferedCourseExists.academicSemester,
-  //         academicFaculty: isOfferedCourseExists.academicFaculty,
-  //         academicDepartment: isOfferedCourseExists.academicDepartment,
-  //         offeredCourse: offeredCourse,
-  //         course: isOfferedCourseExists.course,
-  //         student: student._id,
-  //         faculty: isOfferedCourseExists.faculty,
-  //         isEnrolled: true,
-  //       },
-  //     ],
-  //     { session },
-  //   );
+  try {
+    session.startTransaction();
 
-  //   if (!result) {
-  //     throw new AppError(
-  //       httpStatus.BAD_REQUEST,
-  //       'Failed to enroll in this cousre !',
-  //     );
-  //   }
+    const result = await EnrolledCourse.create(
+      [
+        {
+          semesterRegistration: isOfferedCourseExists.semesterRegistration,
+          academicSemester: isOfferedCourseExists.academicSemester,
+          academicFaculty: isOfferedCourseExists.academicFaculty,
+          academicDepartment: isOfferedCourseExists.academicDepartment,
+          offeredCourse: offeredCourse,
+          course: isOfferedCourseExists.course,
+          student: student._id,
+          faculty: isOfferedCourseExists.faculty,
+          isEnrolled: true,
+        },
+      ],
+      { session },
+    );
 
-  //   const maxCapacity = isOfferedCourseExists.maxCapacity;
-  //   await OfferedCourse.findByIdAndUpdate(offeredCourse, {
-  //     maxCapacity: maxCapacity - 1,
-  //   });
+    if (!result) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Failed to enroll in this cousre !',
+      );
+    }
 
-  //   await session.commitTransaction();
-  //   await session.endSession();
+    const maxCapacity = isOfferedCourseExists.maxCapacity;
+    await OfferedCourse.findByIdAndUpdate(offeredCourse, {
+      maxCapacity: maxCapacity - 1,
+    });
 
-  //   return result;
-  // } catch (err: any) {
-  //   await session.abortTransaction();
-  //   await session.endSession();
-  //   throw new Error(err);
-  // }
+    await session.commitTransaction();
+    await session.endSession();
+
+    return result;
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(err);
+  }
 };
 
 export const EnrolledCourseServices = {

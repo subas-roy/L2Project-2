@@ -8,6 +8,8 @@ import { Student } from '../student/student.model';
 import mongoose from 'mongoose';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 import { Course } from '../course/course.model';
+import { Faculty } from '../faculty/faculty.model';
+import { object } from 'joi';
 
 const createEnrolledCourseIntoDB = async (
   userId: string,
@@ -152,6 +154,8 @@ const updateEnrolledCourseMarksIntoDB = async (
   facultyId: string,
   payload: Partial<TEnrolledCourse>,
 ) => {
+  console.log(facultyId);
+
   const { semesterRegistration, offeredCourse, student, courseMarks } = payload;
 
   const isSemesterRegistrationExists =
@@ -175,6 +179,43 @@ const updateEnrolledCourseMarksIntoDB = async (
   if (!isStudentExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Student not found !');
   }
+
+  const faculty = await Faculty.findOne({ id: facultyId }, { _id: 1 });
+
+  if (!faculty) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found !');
+  }
+
+  const isCourseBelongToFaculty = await EnrolledCourse.findOne({
+    semesterRegistration,
+    offeredCourse,
+    student,
+    faculty: faculty?._id,
+  });
+
+  if (!isCourseBelongToFaculty) {
+    throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden !');
+  }
+
+  const modifiedData: Record<string, unknown> = {
+    ...courseMarks,
+  };
+
+  if (courseMarks && Object.keys(courseMarks).length) {
+    for (const [key, value] of Object.entries(courseMarks)) {
+      modifiedData[`courseMarks.${key}`] = value;
+    }
+  }
+
+  const result = await EnrolledCourse.findByIdAndUpdate(
+    isCourseBelongToFaculty._id,
+    modifiedData,
+    {
+      new: true,
+    },
+  );
+
+  return result;
 };
 
 export const EnrolledCourseServices = {

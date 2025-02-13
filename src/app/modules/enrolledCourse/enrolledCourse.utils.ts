@@ -1,11 +1,11 @@
-const calculateGradeAndPoints = (totalMarks) => {
+export const calculateGradeAndPoints = (totalMarks: number) => {
   let result = {
     grade: 'NA',
     gradePoints: 0,
   };
 
   /**
-   * 0-19 f
+   * 0-19 F
    * 20-39 D
    * 40-59 C
    * 60-79 B

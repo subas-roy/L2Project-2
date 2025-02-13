@@ -22,5 +22,5 @@ export type TEnrolledCourse = {
   courseMarks: TEnrolledCourseMarks;
   grade: TGrade;
   gradePoints: number;
-  isConpleted: boolean;
+  isCompleted: boolean;
 };

@@ -93,7 +93,7 @@ const enrolledCourseSchema = new Schema<TEnrolledCourse>({
     max: 4,
     default: 0,
   },
-  isConpleted: {
+  isCompleted: {
     type: Boolean,
     default: false,
   },

@@ -3,7 +3,7 @@ import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TSemesterRegistration } from './semesterRegistration.interface';
 import httpStatus from 'http-status';
 import { SemesterRegistration } from './semesterRegistration.model';
-import QueryBuilder from '../../builder/Querybuilder';
+import QueryBuilder from '../../builder/QueryBuilder';
 import { RegistrationStatus } from './semesterRegistration.constant';
 
 const createSemesterRegistrationIntoDB = async (

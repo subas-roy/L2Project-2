@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
-import QueryBuilder from '../../builder/Querybuilder';
+import QueryBuilder from '../../builder/QueryBuilder';
 import { Faculty } from './faculty.model';
 import { TFaculty } from './faculty.interface';
 import { FacultySearchableFields } from './faculty.constant';

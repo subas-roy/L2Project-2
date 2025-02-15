@@ -109,7 +109,7 @@ const createFacultyIntoDB = async (
   // create a user object
   const userData: Partial<TUser> = {};
 
-  //if password is not given , use deafult password
+  //if password is not given , use default password
   userData.password = password || (config.default_password as string);
 
   //set faculty role
@@ -125,6 +125,7 @@ const createFacultyIntoDB = async (
   if (!academicDepartment) {
     throw new AppError(400, 'Academic department not found');
   }
+  payload.academicFaculty = academicDepartment.academicFaculty;
 
   const session = await mongoose.startSession();
 
@@ -154,7 +155,6 @@ const createFacultyIntoDB = async (
     payload.user = newUser[0]._id; //reference _id
 
     // create a faculty (transaction-2)
-
     const newFaculty = await Faculty.create([payload], { session });
 
     if (!newFaculty.length) {

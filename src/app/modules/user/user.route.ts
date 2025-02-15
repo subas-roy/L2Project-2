@@ -26,7 +26,13 @@ router.post(
 
 router.post(
   '/create-faculty',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  upload.single('file'), // file parsed by multer
+  // middleware
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
   validateRequest(createFacultyValidationSchema),
   UserControllers.createFaculty,
 );
@@ -40,11 +46,20 @@ router.post(
 
 router.post(
   '/change-status/:id',
-  auth('admin'),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin, USER_ROLE.faculty),
   validateRequest(UserValidation.changeStatusValidationSchema),
   UserControllers.changeStatus,
 );
 
-router.get('/me', auth('student', 'admin', 'faculty'), UserControllers.getMe);
+router.get(
+  '/me',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  UserControllers.getMe,
+);
 
 export const UserRoutes = router;

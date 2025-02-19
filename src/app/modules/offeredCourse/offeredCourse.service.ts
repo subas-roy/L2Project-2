@@ -177,6 +177,14 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
         academicDepartment: student.academicDepartment,
       },
     },
+    {
+      $lookup: {
+        from: 'courses', // database
+        localField: 'course',
+        foreignField: '_id',
+        as: 'course',
+      },
+    },
   ]);
 
   return result;

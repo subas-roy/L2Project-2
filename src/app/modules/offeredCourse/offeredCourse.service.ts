@@ -170,6 +170,7 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
   }
 
   const result = await OfferedCourse.aggregate([
+    // state 1
     {
       $match: {
         semesterRegistration: currentOngoingRegistrationSemester?._id,
@@ -185,6 +186,53 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
         as: 'course',
       },
     },
+    {
+      $unwind: '$course',
+    },
+    // stage 2
+    {
+      $lookup: {
+        from: 'enrolledcourses',
+        let: {
+          currentOngoingRegistrationSemester:
+            currentOngoingRegistrationSemester._id,
+          currentStudent: student._id,
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: [
+                      '$semesterRegistration',
+                      '$$currentOngoingRegistrationSemester',
+                    ],
+                  },
+                  {
+                    $eq: ['$student', '$$currentStudent'],
+                  },
+                  {
+                    $eq: ['$isEnrolled', true],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'enrolledCourses',
+      },
+    },
+    // stage 3
+    // {
+    //   $addFields: {
+    //     $in: ['course._id', {
+    //       $map: {
+    //         input:
+    //       }
+    //     }]
+    //   }
+    // }
   ]);
 
   return result;

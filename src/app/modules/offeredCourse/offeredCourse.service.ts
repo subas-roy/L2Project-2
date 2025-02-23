@@ -186,10 +186,11 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
         as: 'course',
       },
     },
+    // stage 2
     {
       $unwind: '$course',
     },
-    // stage 2
+    // stage 3
     {
       $lookup: {
         from: 'enrolledcourses',
@@ -223,16 +224,29 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
         as: 'enrolledCourses',
       },
     },
-    // stage 3
-    // {
-    //   $addFields: {
-    //     $in: ['course._id', {
-    //       $map: {
-    //         input:
-    //       }
-    //     }]
-    //   }
-    // }
+    // stage 4
+    {
+      $addFields: {
+        isAlreadyEnrolled: {
+          $in: [
+            '$course._id',
+            {
+              $map: {
+                input: '$enrolledCourses',
+                as: 'enroll', // looping variable
+                in: '$$enroll.course',
+              },
+            },
+          ],
+        },
+      },
+    },
+    // stage 5
+    {
+      $match: {
+        isAlreadyEnrolled: false,
+      },
+    },
   ]);
 
   return result;

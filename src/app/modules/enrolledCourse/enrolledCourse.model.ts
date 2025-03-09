@@ -40,38 +40,43 @@ const courseMarksSchema = new Schema<TEnrolledCourseMarks>(
 const enrolledCourseSchema = new Schema<TEnrolledCourse>({
   semesterRegistration: {
     type: Schema.Types.ObjectId,
-    ref: 'semesterRegistration',
+    ref: 'SemesterRegistration',
     required: true,
   },
 
+  academicSemester: {
+    type: Schema.Types.ObjectId,
+    ref: 'AcademicSemester',
+    required: true,
+  },
   academicDepartment: {
     type: Schema.Types.ObjectId,
-    ref: 'academicDepartment',
+    ref: 'AcademicDepartment',
     required: true,
   },
   academicFaculty: {
     type: Schema.Types.ObjectId,
-    ref: 'academicFaculty',
+    ref: 'AcademicFaculty',
     required: true,
   },
   offeredCourse: {
     type: Schema.Types.ObjectId,
-    ref: 'offeredCourse',
+    ref: 'OfferedCourse',
     required: true,
   },
   course: {
     type: Schema.Types.ObjectId,
-    ref: 'course',
+    ref: 'Course',
     required: true,
   },
   student: {
     type: Schema.Types.ObjectId,
-    ref: 'student',
+    ref: 'Student',
     required: true,
   },
   faculty: {
     type: Schema.Types.ObjectId,
-    ref: 'faculty',
+    ref: 'Faculty',
     required: true,
   },
   isEnrolled: {
